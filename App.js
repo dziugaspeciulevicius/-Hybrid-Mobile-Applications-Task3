@@ -1,21 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
 
-export default function App() {
+import { Provider } from "react-redux";
+import store from "./src/store.js";
+import Routes from "./src/components/Routes";
+
+import HomeScreen from "./src/screens/Home.screen";
+import AddPostScreen from "./src/screens/AddPost.screen";
+import ProfileScreen from "./src/screens/Profile.screen";
+import EditScreen from "./src/screens/Edit.screen";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import "@react-navigation/material-bottom-tabs";
+
+const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+const Tabs = createBottomTabNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>hello, starting over :))))))))!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Tabs.Navigator>
+          <Drawer.Screen name="Home" component={HomeScreen} />
+          <Drawer.Screen name="Add Post" component={AddPostScreen} />
+          <Drawer.Screen name="Edit" component={EditScreen} />
+          <Drawer.Screen name="Profile" component={ProfileScreen} />
+        </Tabs.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
