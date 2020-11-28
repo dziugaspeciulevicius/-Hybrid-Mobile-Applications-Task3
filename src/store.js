@@ -6,7 +6,9 @@ const reducer = combineReducers({
     adList: adReducer
 });
 
+
 const initialState = {
+
 };
 
 const middleware = [thunk];

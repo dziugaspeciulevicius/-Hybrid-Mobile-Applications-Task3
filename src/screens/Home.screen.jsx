@@ -1,15 +1,12 @@
-import React, { useState, Component } from "react";
+import React, { Component } from "react";
 import {
   StyleSheet,
   View,
   Text,
   FlatList,
   TouchableHighlight,
+  Animated,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-// import { render } from "react-dom";
-
-// import get ads function
 import { getAds, deleteAd } from "../actions/adActions";
 import { connect } from "react-redux";
 // import { adList } from "../store.js";
@@ -23,11 +20,20 @@ class HomeScreen extends Component {
 
   render() {
     console.log("home render", this.props.listOfAds);
-    // const adList = useSelector((state) => state.adList);
-    // const { title, details, price } = adList;
+
+    // animatedAnimation = new Animated.Value(200);
+    // animate = (value) => {
+    //   Animated.timing(
+    //     this.animatedAnimation,
+    //     {
+    //       toValue: value,
+    //       duration: 750
+    //     }
+    //   ).start()
+    // }
 
     return (
-      <View style={styles.container}>
+      <Animated.View style={styles.container} >
         <FlatList
           style={styles.list}
           data={this.props.listOfAds}
@@ -47,14 +53,24 @@ class HomeScreen extends Component {
                 <View style={styles.postsStyles}>
                   <TouchableHighlight
                     onPress={() =>
-                      this.props.navigation.navigate("Edit", { ...item })
+                      // this.props.navigation.navigate("Edit", { ...item })
+                      {
+                        this.props.navigation.navigate("Edit", {
+                          adId: item.key,
+                          adTitle: item.title,
+                          adDetails: item.details,
+                          adPrice: item.price,
+                        });
+                      }
                     }
                   >
                     <View style={styles.iconGap}>
                       <Icon size={30} color="white" name="edit" />
                     </View>
                   </TouchableHighlight>
-                  <TouchableHighlight onPress={() => this.props.deleteAd(item.key)}>
+                  <TouchableHighlight
+                    onPress={() => this.props.deleteAd(item.key)}
+                  >
                     <View>
                       <Icon size={30} color="red" name="close" />
                     </View>
@@ -64,13 +80,13 @@ class HomeScreen extends Component {
             );
           }}
         />
-      </View>
+      </Animated.View>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  const listOfAds = _.map(state.adList.adList, (val, key) => {
+  const listOfAds = _.map(state.adList.adLists, (val, key) => {
     return {
       ...val,
       key: key,
@@ -78,7 +94,7 @@ const mapStateToProps = (state) => {
   });
   return {
     // state.fromStore.fromReducer
-    // listOfAds: state.adList.adList,
+    // listOfAds: state.adList.adLists,
     listOfAds,
   };
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
@@ -6,9 +6,33 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Animated
 } from "react-native";
 import { postAd } from "../actions/adActions";
 import { connect } from "react-redux";
+
+/*========== FADE-IN ANIMATION ==========*/
+const FadeInView = (props) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 10000,
+    }).start();
+  }, [fadeAnim]);
+
+  return (
+    <Animated.View // Special animatable View
+      style={{
+        ...props.style,
+        opacity: fadeAnim, // Bind opacity to animated value
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  );
+};
 
 const AddPostScreen = ({ navigation }) => {
   const [title, setTitle] = useState("");
@@ -32,31 +56,33 @@ const AddPostScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
-        <TextInput
-          style={styles.input}
-          value={title}
-          placeholder="Ad title"
-          onChangeText={(title) => setTitle(title)}
-        />
-        <TextInput
-          style={styles.input}
-          value={details}
-          placeholder="Ad details"
-          onChangeText={(details) => setDetails(details)}
-        />
-        <TextInput
-          style={styles.input}
-          value={price}
-          placeholder="Ad price (optional)"
-          onChangeText={(price) => setPrice(price)}
-        />
-        <View style={styles.addButtonContainer}>
-          <TouchableOpacity onPress={submitHandler}>
-            <View style={styles.addButton}>
-              <Text style={styles.addButtonText}>Post and ad</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <FadeInView>
+          <TextInput
+            style={styles.input}
+            value={title}
+            placeholder="Ad title"
+            onChangeText={(title) => setTitle(title)}
+          />
+          <TextInput
+            style={styles.input}
+            value={details}
+            placeholder="Ad details"
+            onChangeText={(details) => setDetails(details)}
+          />
+          <TextInput
+            style={styles.input}
+            value={price}
+            placeholder="Ad price (optional)"
+            onChangeText={(price) => setPrice(price)}
+          />
+          <View style={styles.addButtonContainer}>
+            <TouchableOpacity onPress={submitHandler}>
+              <View style={styles.addButton}>
+                <Text style={styles.addButtonText}>Post and ad</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </FadeInView>
       </View>
     </View>
   );
